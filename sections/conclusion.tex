@@ -1,0 +1,20 @@
+\section{Discussion and Conclusion}
+\label{sec:conclusion}
+
+Discussion of results:
+The model predictive controller using the the Koopman model outperformed the other controllers in a variety of trajectory following tasks.
+
+Sources of Error:
+-Model inaccuracies due to insufficient data.
+-Model inaccuracies due to Koopman truncation.
+-Poor performance of electronic pressure regulators.
+-Limited accuracy of camera based laser tracking system.
+
+Current Shortcomings of Method:
+-Curse of dimensionality, but sparsity could help (cite that paper)
+-Does not generalize outside of observed data, could be solved by switching controllers/hybrid models.
+
+Take Aways:
+-Has potential to revolutionize soft robot control by providing much more control friendly representation of dynamics.
+-Soft robots are well suited for a data-driven method because they can be observed safely under randomized control inputs.
+-This is the first time this method has been shown to be effective for controlling a real soft robotic system.

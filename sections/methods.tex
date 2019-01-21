@@ -1,0 +1,56 @@
+\section{Methods}
+\label{sec:methods}
+
+%% Introduction
+Because the Koopman model is linear, it can be used to design linear controllers for nonlinear dynamical systems.
+
+
+%% Description of systems
+\subsection{Description of Systems}
+
+\subsubsection{Simulated System: Double Pendulum}
+\Dan{Might remove the double pendulum example and focus exclusively on soft robot. At this point I'm not sure the pendulum adds anything other than re-hashing the results of the Mezic paper.}
+
+\subsubsection{Real System: Soft Arm with Laser Pointer}
+The soft robot system used in experiments consisted of two sections composed of three pneumatically driven McKibben actuators (also known as Pneumatic Artificial muscles or PAMs) adhered to a central foam spine by latex rubber.
+
+
+%% Description of compared controllers
+\subsection{Description of Controllers}
+
+\begin{itemize}
+    \item Linear MPC using Koopman model.
+    \item Linear MPC using linear state space model.
+    \item MPC with local linearization.
+    \item Nonlinear MPC.
+\end{itemize}
+
+\subsubsection{Linear MPC}
+
+%% Linear MPC optimization problem
+\begin{equation}
+\begin{aligned}
+& \underset{u_{i} , x_{i}}{\text{min}}
+& & z_{N_p}^{T} P z_{N_p} + \cdots \\
+&&& \cdots + \sum_{i=0}^{N_p - 1} z_i^T Q z_i + u_i^T R u_i + q^T z_i + r^T u_i\\
+& \text{s.t.}
+& & z_{i+1} = A z_i + B u_i , \; i = 0 , \ldots , N_p - 1 \\
+&&& E z_i + F u_i \leq b , \; i = 0 , \ldots , N_p - 1 \\
+&&& z_0 = \psi(x_k).
+\end{aligned}
+\end{equation}
+
+
+\subsubsection{Nonlinear MPC}
+
+%% Nonlinear MPC optimization problem
+\begin{equation}
+\begin{aligned}
+& \underset{u_{i} , x_{i}}{\text{min}}
+& & z_{N_p}^{T} P z_{N_p} + \sum_{i=0}^{N_p - 1} z_i^T Q z_i + u_i^T R u_i + q^T z_i + r^T u_i\\
+& \text{s.t.}
+& & z_{i+1} = f( z_i , u_i ) , \; i = 0 , \ldots , N_p - 1 \\
+&&& E z_i + F u_i \leq b , \; i = 0 , \ldots , N_p - 1 \\
+&&& z_0 = \psi(x_k).
+\end{aligned}
+\end{equation}

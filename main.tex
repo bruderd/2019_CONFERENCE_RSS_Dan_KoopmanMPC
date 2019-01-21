@@ -7,13 +7,26 @@
 \usepackage[bookmarks=true]{hyperref}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[table]{xcolor}
+\usepackage{multirow}
+\usepackage{color}  % For Highlighting
+
+% Editing tools
+\newcounter{RamCount}
+\newcounter{DavidCount}
+\newcommand{\hilight}[1]{\colorbox{yellow}{#1}}
+\newcommand{\David}[1]{\textcolor{red}{\textbf{\theDavidCount}: (#1)} \addtocounter{DavidCount}{1}}
+\newcommand{\Ram}[1]{\textcolor{blue}{\textbf{\theRamCount}: (#1)} \addtocounter{RamCount}{1}}
+\newcommand{\Dan}[1]{\textcolor{magenta}{(#1)}}
+\newcommand{\Audrey}[1]{\textcolor{maroon}{(#1)}}
 
 %% Custom macros
 \newcommand{\Real}{\mathbb{R}}
 
 \pdfinfo{
    /Author (Daniel Bruder)
-   /Title  (Control of a Soft Robot Manipulator with the Koopman Operator and Model Predictive Control)
+   /Title  (Modeling and Control of Soft Robots using the Koopman Operator and Model Predictive Control)
    /CreationDate (D:20101201120000)
    /Subject (Robots)
    /Keywords (Soft Robots; Koopman Operator; Model Predictive Control)
@@ -22,7 +35,7 @@
 \begin{document}
 
 % paper title
-\title{Control of a Soft Robot Manipulator with the Koopman Operator and Model Predictive Control}
+\title{Modeling and Control of Soft Robots using the Koopman Operator and Model Predictive Control}
 
 % You will get a Paper-ID when submitting a pdf file to the conference system
 \author{Author Names Omitted for Anonymous Review. Paper-ID [add your ID here]}

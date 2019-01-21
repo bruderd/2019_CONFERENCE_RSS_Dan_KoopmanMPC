@@ -1,6 +1,54 @@
 \section{Introduction} 
 \label{sec:intro}
 
-%% 
+%% Why soft robots?
+%% Body softness has been shown to be useful for robots operating in unstructured/unpredictable environments, or alongside humans, but hard to control.
+Soft-bodied robots can exploit their compliance to adapt to unstructured environments and safely interact with fragile objects (including human bodies!), but this compliance also makes them challenging to model and control \cite{rus2015design}.
+While the soft robotics community has produced many novel devices such as soft grippers (cite), crawlers (cite), and swimmers (cite), these devices are designed to exploit the flexibility of their bodies to achieve grasping and locomotion, and do not exhibit precise control capabilities.
+This contrasts with the soft systems found in nature such as octopus arms, elephant trunks, and tongues (cite catapults and catpaws) which simultaneously display precise maneuverability and adaptability.
+The challenge of emulating such versatile behavior can be attributed to two innate characteristics of soft systems: continuum structure, and nonlinear dynamical behavior. 
+
+%% Technical challenges to modeling: continuum structure
+% The challenge of modeling and controlling soft robots arises from two innate characteristics: continuum structure, and nonlinear dynamical behavior.
+\Dan{Why is modeling hard?}
+Rigid-bodied robots consist of rigid links connected together by discrete joints.
+Consequently, there is a natural choice of state variables, i.e. joint deformations, that fully describe the geometry of the system.
+Soft robots, in contrast, do not exhibit localized deformation at discrete joints, but instead deform continuously along their bodies.
+Therefore, any finite choice of state variables will fall short of fully describing the geometry of a soft robot.
+Simplified models, notably the piecewise constant curvature (cite) and analogous rigid models (cite), have been developed to capture the most salient features of soft systems, but still fall short in scenarios where the underlying model assumptions break down. 
+% Infinite-degrees of freedom paired with a necessarily finite actuation scheme implies underactuation, which 
+
+%% Technical challenge to control: Nonlinear dynamical behavior (think about this more and fix it)
+\Dan{Why is control hard?}
+Even in cases where approximate models can ... soft robots are plagued by nonlinear dynamical behavior.
+While few mechanical systems exhibit completely linear dynamic behavior, rigid-bodied systems have approximate linear representations that are very good. 
+Specifically, joint forces are related linearly to joint velocities through a state-dependent Jacobian (cite), which enables linear control methods to be used to control joint velocities.
+Soft robots are not as amenable to linear representations.
+Some effort has been made to apply Jacobians to soft robotic systems, but such efforts are limited to quasi-static (cite my RAL paper) cases.
+The nonlinearities presented by nonlinear systems are harder to deal with for this reason.
+% Nonlinear control methodologies do not have the same guarantees as linear control (can probably find citation for this)
+
+%% Solution: Data-driven/linear representation, description of koopman approach
+In this paper, we present a novel method for the modeling and control of soft robots that consists of the construction of a linear representation of the system to enable the use of established linear control methodologies to control soft robots \Dan{edit this opening sentence}.
+This approach (theoretically) consists of \emph{lifting} the state-space to an infinite-dimensional space of scalar functions (referred to as observables), where the flow of such observables along trajectories of the nonlinear dynamical system is described by the \emph{linear} Koopman operator.
+The Koopman operator describes flow of the values of the state variables themselves, since they lie within the space of observables.
+In practice it is not feasible to compute an infinite-dimensional operator, so a modified version of the Extended Dynamic Mode Decompostion (EDMD) is employed to compute a finite-dimensional projection of the Koopman operator onto a finite subspace of all observables (scalar functions).
+This finite-dimensional approximation of the Koopman operator describes the evolution of the values of the state variables themselves, provided that they lie within the finite subspace of observables upon which the operator is projected.
+Importantly, this linear system representation enables the use of linear control methods, such as linear model predictive control, to control a nonlinear dynamical system.  
+This approach is based on the system identification method originally presented in \citet{mauroy2017koopman} and the control approach laid out in \citet{korda2018linear}.
+
+%% Why this approach is uniquely well suited for soft robots: 
+This (modeling and control) approach is uniquely well suited to soft robots for several reasons: soft robots, unlike many conventional rigid bodied robots, pose less of a physical threat to themselves or their surroundings when subjected to random control inputs (consider a bipedal robot under random control inputs...). Therefore, it is possible to apply data-driven modeling techniques... 
+Furthermore, soft robots are nonlinear, and nonlinear control methods are generally suboptimal or slow (or both). Linear control is better...
 
 %% Contributions
+The primary contribution of this work is a method for controlling unmodeled nonlinear systems using linear MPC (convex QP, quick to solve realtime, linearization not necessary). 
+% The secondary contribution of this work is an improvement to the Koopman based system identification method from CITE that promotes sparsity of the resulting model without sacrificing model efficacy/accuracy (which in turn increases the speed at which the MPC problem can be solved at each iteration).
+These are demonstrated on a two systems: a simulated planar manipulator (see Fig. PUT), and a real soft pneumatic manipulator projecting a laser dot onto a plane (see Fig. PUT). 
+
+%% Outline
+The rest of this paper is organized as follows:
+In Section \ref{sec:theory} we formally introduce the Koopman operator and describe the system identification and control method. 
+In Section \ref{sec:methods} we describe the two systems and the other control methods applied to them for comparison.
+In Section \ref{sec:results} we summarize the results of applying various nonlinear system identification techniques to the collected data and compare the performances of the models generated. 
+In Section \ref{sec:conclusion} concluding remarks and perspectives are provided.
