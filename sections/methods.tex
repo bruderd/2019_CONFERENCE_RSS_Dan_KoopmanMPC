@@ -5,24 +5,23 @@
 Because the Koopman model is linear, it can be used to design linear controllers for nonlinear dynamical systems.
 
 
-%% Description of systems
-\subsection{Description of Systems}
+%% Description of system
+\subsection{Description of System: Soft Arm with Laser Pointer}
 
-\subsubsection{Simulated System: Double Pendulum}
-\Dan{Might remove the double pendulum example and focus exclusively on soft robot. At this point I'm not sure the pendulum adds anything other than re-hashing the results of the Mezic paper.}
-
-\subsubsection{Real System: Soft Arm with Laser Pointer}
-The soft robot system used in experiments consisted of two sections composed of three pneumatically driven McKibben actuators (also known as Pneumatic Artificial muscles or PAMs) adhered to a central foam spine by latex rubber.
+The soft robot system used in experiments consists of two sections composed of three pneumatically driven McKibben actuators (also known as Pneumatic Artificial muscles or PAMs) adhered to a central foam spine by latex rubber suspended from a raised platform (see Fig. \Dan{Add figure with photo and schematic of robot}) .
+The PAMs in the upper and lower sections are internally connected and arranged such that they share three input pressure lines and for any bending of the upper section, there is bending in the opposite direction in the bottom section.
+This ensures that the laser pointer mounted to the end effector roughly points down at all times.
+Roughly 30 cm beneath the hanging arm lies a flat board where the laser dot is projected.
+A digital webcam aimed at the board is used to capture the position of the laser dot during trials.
 
 
 %% Description of compared controllers
 \subsection{Description of Controllers}
 
 \begin{itemize}
-    \item Linear MPC using Koopman model.
-    \item Linear MPC using linear state space model.
-    \item MPC with local linearization.
-    \item Nonlinear MPC.
+    \item K-MPC: Koopman model predictor
+    \item L-MPC: linear state-space model predictor
+    \item N-MPC: nonlinear neural network model predictor
 \end{itemize}
 
 \subsubsection{Linear MPC}
@@ -54,3 +53,16 @@ The soft robot system used in experiments consisted of two sections composed of 
 &&& z_0 = \psi(x_k).
 \end{aligned}
 \end{equation}
+
+%% Description of task
+\subsection{Description of Task}
+
+The performance of the various controllers was assessed with respect to a set of three trajectory following tasks.
+Each task was to follow a reference trajectory as it traced out the following shapes:
+\begin{enumerate}
+    \item Block letter M (see Fig. \ref{fig:compare_blockM})
+    \item Pacman (see Fig. \ref{fig:compare_pacman})
+    \item TBD.
+\end{enumerate}
+The error for each trial was quantified as the root-mean-square error (RMSE) at each time step over the length of the trial.
+The RMSE error for each controller and trial is presented in Table \ref{tab:RMSE}.

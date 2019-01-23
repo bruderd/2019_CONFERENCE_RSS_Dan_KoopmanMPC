@@ -1,12 +1,20 @@
-\section{Theory}
-\label{sec:theory}
+\section{System Identification}
+\label{sec:sysid}
+
+%% FIG: MODEL VS. WEIGHT OF L1 PENALTY (LASSO)
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figures/lasso_placeholder.png}
+    \caption{As the weight of the L1 penalty term increases, the Koopman operator matrix becomes more dense, and the model error decreases then levels off. This shows that there is a much sparser representation of the Koopman operator than the least-squares solution that generates a model of nearly identical accuracy.}
+    \label{fig:lasso}
+\end{figure}
+
 
 %% Overview of this section
 Any finite-dimensional nonlinear dynamical system has an equivalent infinite-dimensional linear representation in the space of real-valued functions of the system's state \cite{}.
 In this function space, the (linear) Koopman Operator describes the flow of functions along trajectories of the system.
 % The dual of the Koopman operator, the Perron-Frobenius operator, describes the dynamics of the system...
 While it is not possible to fully represent the infinite-dimensional Koopman operator, it is possible to represent its projection onto a finite-dimensional subspace.
-
 
 %% Overview of the Koopman operator and how it represents dynamical systems
 \subsection{Koopman Representation of Dynamical Systems}

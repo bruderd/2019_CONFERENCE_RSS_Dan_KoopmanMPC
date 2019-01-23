@@ -15,9 +15,11 @@
 % Editing tools
 \newcounter{RamCount}
 \newcounter{DavidCount}
+\newcounter{BrentCount}
 \newcommand{\hilight}[1]{\colorbox{yellow}{#1}}
 \newcommand{\David}[1]{\textcolor{red}{\textbf{\theDavidCount}: (#1)} \addtocounter{DavidCount}{1}}
 \newcommand{\Ram}[1]{\textcolor{blue}{\textbf{\theRamCount}: (#1)} \addtocounter{RamCount}{1}}
+\newcommand{\Brent}[1]{\textcolor{brown}{\textbf{\theBrentCount}: (#1)} \addtocounter{BrentCount}{1}}
 \newcommand{\Dan}[1]{\textcolor{magenta}{(#1)}}
 \newcommand{\Audrey}[1]{\textcolor{maroon}{(#1)}}
 
@@ -90,7 +92,8 @@
 
 %% Insert all content here
 \input{sections/intro.tex}
-\input{sections/theory.tex}
+\input{sections/sysid.tex}
+\input{sections/mpc.tex}
 \input{sections/methods.tex}
 \input{sections/results.tex}
 \input{sections/conclusion.tex}
