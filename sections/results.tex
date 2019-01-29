@@ -1,6 +1,31 @@
 \section{Results}
 \label{sec:results}
 
+%% FIG: MODEL VS. WEIGHT OF L1 PENALTY (LASSO)
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figures/lasso_ph.png}
+    \caption{\Ram{This picture needs to appear later.} As the weight of the L1 penalty term increases, the Koopman operator matrix becomes more dense, and the model error decreases then levels off. This shows that there is a much sparser representation of the Koopman operator than the least-squares solution that generates a model of nearly identical accuracy.}
+    \label{fig:lasso}
+\end{figure}
+
+%% FIG: Noise inherent to the system
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figures/noise_ph.png}
+    \caption{\Dan{Need to use different colors for y1 y2. Blue and red already used to show state space vs. lifted space.}}
+    \label{fig:noise}
+\end{figure}
+
+
+%% FIGURE: Linear vs. Koopman model predictions
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figures/predictionComparison_ph.png}
+    \caption{\Dan{Placeholder for plot showing the prediction comparison between the koopman and the linear state space model.}}
+    \label{fig:compare_blockM}
+\end{figure}
+
 %% FIGURE: Visual comparison of controller performance for the block M.
 \begin{figure*}
     \centering
