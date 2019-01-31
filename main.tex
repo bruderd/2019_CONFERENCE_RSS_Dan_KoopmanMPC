@@ -6,11 +6,15 @@
 \usepackage{multicol}
 \usepackage[bookmarks=true]{hyperref}
 \usepackage{amsmath}
+\usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage{graphicx}
 \usepackage[table]{xcolor}
 \usepackage{multirow}
 \usepackage{color}  % For Highlighting
+\usepackage[normalem]{ulem}
+\usepackage{soul}
+\usepackage[ruled]{algorithm2e}
 
 % Editing tools
 \newcounter{RamCount}
@@ -25,6 +29,8 @@
 
 %% Custom macros
 \newcommand{\Real}{\mathbb{R}}
+\newtheorem{defn}{Definition}
+\newtheorem{ex}[defn]{Example}
 
 \pdfinfo{
    /Author (Daniel Bruder)
@@ -94,8 +100,7 @@
 \input{sections/intro.tex}
 \input{sections/sysid.tex}
 \input{sections/mpc.tex}
-\input{sections/methods.tex}
-\input{sections/results.tex}
+\input{sections/experiments.tex}
 \input{sections/conclusion.tex}
 
 \section*{Acknowledgments}

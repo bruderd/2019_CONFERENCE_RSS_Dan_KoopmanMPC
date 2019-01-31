@@ -1,4 +1,71 @@
 \section{Model Predictive Control}
 \label{sec:mpc}
 
-%% The Koopman MPC problem (consult Mezic paper)
+A system model enables the design of model-based controllers that leverage model predictions to choose suitable control inputs for a given task.
+Unlike simple feedback controllers \Dan{not simple, what's the right word?}, model-based controllers have the ability to anticipate future events, allowing them to optimally choose control inputs over a finite time horizon.
+A popular model-based control framework is that of model predictive control (MPC), which optimizes the control input over a finite time horizon, applies that input for a single timestep, then optimizes again, repeatedly (cite).
+
+For linear systems, optimizing the control input over an $N_h$ step planning horizon consists of solving a convex quadratic program.
+This is also the case for a Koopman based MPC controller, which solves the following program at each time instance $k$ of the closed-loop operation:
+
+%% Linear MPC optimization problem
+\begin{equation}
+\begin{aligned}
+& \underset{u_{i} , z_{i}}{\text{min}}
+& & z_{N_h}^{T} G_{N_h} z_{N_h} + + g_{N_h}^T z_i \cdots \\
+&&& \cdots + \sum_{i=0}^{N_h - 1} z_i^T G_i z_i + u_i^T H_i u_i + g_i^T z_i + h_i^T u_i\\
+& \text{s.t.}
+& & z_{i+1} = A z_i + B u_i , \; \hspace{15pt} i = 0 , \ldots , N_h - 1 \\
+&&& E_i z_i + F_i u_i \leq b_i , \; \hspace{15pt} i = 0 , \ldots , N_h - 1 \\
+&&& z_0 = \psi (x_{[k]})
+\end{aligned} \label{eq:mpc}
+\end{equation}
+with $G_i \in \Real^{N \times N}$ and $H_i \in \Real^{m \times m}$ positive semidefinite and where each time the program is called, the predictions are initialized from the current lifted state $\psi (x_{[k]})$.
+The matrices $E_i \in \Real^{c \times N}$ and $F_i \in \Real^{c \times m}$ and the vector $b_i \in \Real^{c}$ define state and input polyhedral constraints where $c$ denotes the number of imposed constraints.
+Algorithm \ref{alg:mpc} summarizes the closed-loop operation of this Koopman based MPC controller.
+
+%% MPC algorithm
+\begin{algorithm}
+\SetAlgoLined
+\For{ $k = 0 , 1 , 2 , ... $}{
+\textbf{Step 1:} Set $z_0 = \psi ( x_{[k]} )$ \\
+\textbf{Step 2:} Solve \eqref{eq:mpc} to find optimal input $(u_i^*)_{i=0}^{N_h}$ \\
+\textbf{Step 3:} Set $u_{[k]} = u_0^*$ \\
+\textbf{Step 4:} Apply $u_{[k]}$ to the system
+}
+ \caption{Koopman-Based MPC}
+ \label{alg:mpc}
+\end{algorithm}
+
+
+% \begin{equation}
+% \begin{aligned}
+%     J () &=
+%     & & z_{N_p}^{T} P z_{N_p} + \cdots \\
+%     &&& \cdots + \sum_{i=0}^{N_p - 1} z_i^T Q z_i + u_i^T R u_i + q^T z_i + r^T u_i\\
+% \end{aligned} \label{eq:mpccost}
+% \end{equation}
+
+Since this optimization problem is convex, it has a unique globally optimal solution which can be computed efficiently even for high dimensional models \Dan{Ram, how should I make this point without being so hand wavy. Should I not even mentional dimension?}.
+This contrasts sharply with the MPC formulation for nonlinear systems (referred to as nonlinear model predictive control or NMPC (cite)).
+NMPC requires solving an optimization problem with nonlinear constraints and (potentially) nonlinear cost function.
+Problems of this kind do not necessarily have unique globally optimal solutions, and except in special cases cannot be solved quickly enough to run in real-time (cite) \Dan{Could use some help in writing more precise language here Ram}.
+
+
+
+
+
+
+
+% \subsubsection{Nonlinear MPC}
+% %% Nonlinear MPC optimization problem
+% \begin{equation}
+% \begin{aligned}
+% & \underset{u_{i} , x_{i}}{\text{min}}
+% & & z_{N_p}^{T} P z_{N_p} + \sum_{i=0}^{N_p - 1} z_i^T Q z_i + u_i^T R u_i + q^T z_i + r^T u_i\\
+% & \text{s.t.}
+% & & z_{i+1} = f( z_i , u_i ) , \; i = 0 , \ldots , N_p - 1 \\
+% &&& E z_i + F u_i \leq b , \; i = 0 , \ldots , N_p - 1 \\
+% &&& z_0 = \psi(x_k).
+% \end{aligned}
+% \end{equation

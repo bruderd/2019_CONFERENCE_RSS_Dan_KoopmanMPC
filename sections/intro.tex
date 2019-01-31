@@ -49,7 +49,7 @@ Thus numerical solvers may converge to suboptimal local extrema rather than opti
 %% FIGURE: Overview of the different system representations and control approaches
 \begin{figure}
     \centering
-    \includegraphics[width=\linewidth]{figures/overview_v5_ph.png}
+    \includegraphics[width=\linewidth]{figures/overview_v7_ph.pdf}
     \caption{Caption}
     \label{fig:overview}
 \end{figure}
@@ -86,8 +86,7 @@ Both of these are desirable features when working with real systems, which suffe
 The rest of this paper is organized as follows:
 In Section \ref{sec:sysid} we formally introduce the Koopman operator and describe the procedure for constructing linear models of nonlinear systems. 
 In Section \ref{sec:mpc} we describe how the Koopman model can be used to construct a linear model predictive controller for a nonlinear dynamical system.
-In Section \ref{sec:methods} we describe the soft robot used in our experiments and the various other controllers used for comparison.
-In Section \ref{sec:results} we summarize the performance of each controller at given trajectory following tasks.
+In Section \ref{sec:experiments} we describe the soft robot used in our experiments and evaluate the performance of a Koopman-based MPC controller on a set of trajectory following tasks.
 In Section \ref{sec:conclusion} concluding remarks and perspectives are provided.
 
 
