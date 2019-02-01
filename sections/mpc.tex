@@ -2,36 +2,41 @@
 \label{sec:mpc}
 
 A system model enables the design of model-based controllers that leverage model predictions to choose suitable control inputs for a given task.
-Unlike simple feedback controllers \Dan{not simple, what's the right word?}, model-based controllers have the ability to anticipate future events, allowing them to optimally choose control inputs over a finite time horizon.
-A popular model-based control framework is that of model predictive control (MPC), which optimizes the control input over a finite time horizon, applies that input for a single timestep, then optimizes again, repeatedly (cite).
+In particular, model-based controllers can anticipate future events, allowing them to optimally choose control inputs over a finite time horizon.
+The most popular model-based control design technique is model predictive control (MPC), wherein one optimizes the control input over a finite time horizon, applies that input for a single timestep, and then optimizes again, repeatedly \cite{rawlings2009model}.
+Applying MPC to design a controller for linear systems corresponds to solving a convex quadratic program. 
 
-For linear systems, optimizing the control input over an $N_h$ step planning horizon consists of solving a convex quadratic program.
-This is also the case for a Koopman based MPC controller, which solves the following program at each time instance $k$ of the closed-loop operation:
+% optimizing the control input over an $N_h$ step planning horizon consists of solving a convex quadratic program.
 
+Importantly, this is also the case during Koopman based MPC control design, wherein one solves the following program at each time instance $k$ of the closed-loop operation:
 %% Linear MPC optimization problem
 \begin{equation}
 \begin{aligned}
-& \underset{u_{i} , z_{i}}{\text{min}}
-& & z_{N_h}^{T} G_{N_h} z_{N_h} + + g_{N_h}^T z_i \cdots \\
-&&& \cdots + \sum_{i=0}^{N_h - 1} z_i^T G_i z_i + u_i^T H_i u_i + g_i^T z_i + h_i^T u_i\\
+& \underset{u[i] , z[i]}{\text{min}}
+& & z[N_h]^{T} G_{N_h} z[N_h] + g_{N_h}^T z[N_h] + \cdots \\
+&&& \sum_{i=0}^{N_h - 1} z[i]^T G_i z[i] + u[i]^T H_i u[i] + g_i^T z[i] + h_i^T u[i]\\
 & \text{s.t.}
-& & z_{i+1} = A z_i + B u_i , \; \hspace{15pt} i = 0 , \ldots , N_h - 1 \\
-&&& E_i z_i + F_i u_i \leq b_i , \; \hspace{15pt} i = 0 , \ldots , N_h - 1 \\
-&&& z_0 = \psi (x_{[k]})
+& & z[i+1] = \hat{A} z[i] + \hat{B} u[i] , \quad \forall i \in \{ 0 , \ldots , N_h - 1 \} \\
+&&& E_i z[i] + F_i u[i] \leq b_i , \quad \forall i \in \{ 0 , \ldots , N_h - 1\} \\
+&&& z[0] = \psi (x[k])
 \end{aligned} \label{eq:mpc}
 \end{equation}
-with $G_i \in \Real^{N \times N}$ and $H_i \in \Real^{m \times m}$ positive semidefinite and where each time the program is called, the predictions are initialized from the current lifted state $\psi (x_{[k]})$.
+where $G_i \in \Real^{N \times N}$ and $H_i \in \Real^{m \times m}$ are positive semidefinite matrices and where each time the program is called, the predictions are initialized from the current lifted state $\psi (x[k])$.
 The matrices $E_i \in \Real^{c \times N}$ and $F_i \in \Real^{c \times m}$ and the vector $b_i \in \Real^{c}$ define state and input polyhedral constraints where $c$ denotes the number of imposed constraints.
 Algorithm \ref{alg:mpc} summarizes the closed-loop operation of this Koopman based MPC controller.
 
 %% MPC algorithm
-\begin{algorithm}
+\begin{algorithm}[t]
 \SetAlgoLined
+\KwIn{ Prediction horizon: $N_h$ \\
+       \hspace{32pt} Cost matrices: $G_i , H_i , g_i , h_i$ for  $i = 0 , ... ,N_h$ \\
+       \hspace{32pt} Constraint matrices: $E_i , F_i , b_i$ for $i = 0 , ... ,N_h$ \\
+       \hspace{32pt} Model matrices: $\hat{A} , \hat{B}$ }
 \For{ $k = 0 , 1 , 2 , ... $}{
-\textbf{Step 1:} Set $z_0 = \psi ( x_{[k]} )$ \\
-\textbf{Step 2:} Solve \eqref{eq:mpc} to find optimal input $(u_i^*)_{i=0}^{N_h}$ \\
-\textbf{Step 3:} Set $u_{[k]} = u_0^*$ \\
-\textbf{Step 4:} Apply $u_{[k]}$ to the system
+\textbf{Step 1:} Set $z[0] = \psi ( x[k] )$ \\
+\textbf{Step 2:} Solve \eqref{eq:mpc} to find optimal input $(u[i]^*)_{i=0}^{N_h}$ \\
+\textbf{Step 3:} Set $u[k] = u[0]^*$ \\
+\textbf{Step 4:} Apply $u[k]$ to the system
 }
  \caption{Koopman-Based MPC}
  \label{alg:mpc}
@@ -46,15 +51,11 @@ Algorithm \ref{alg:mpc} summarizes the closed-loop operation of this Koopman bas
 % \end{aligned} \label{eq:mpccost}
 % \end{equation}
 
-Since this optimization problem is convex, it has a unique globally optimal solution which can be computed efficiently even for high dimensional models \Dan{Ram, how should I make this point without being so hand wavy. Should I not even mentional dimension?}.
-This contrasts sharply with the MPC formulation for nonlinear systems (referred to as nonlinear model predictive control or NMPC (cite)).
+Since this optimization problem is convex, it has a unique globally optimal solution that can efficiently constructed without initialization \cite{boyd2004convex} for models with thousands of states and inputs  \cite{paulson2014fast,stellato2018osqp}.
+This contrasts sharply with the MPC formulation for nonlinear systems (referred to as nonlinear model predictive control or NMPC \cite{allgower2012nonlinear}).
 NMPC requires solving an optimization problem with nonlinear constraints and (potentially) nonlinear cost function.
-Problems of this kind do not necessarily have unique globally optimal solutions, and except in special cases cannot be solved quickly enough to run in real-time (cite) \Dan{Could use some help in writing more precise language here Ram}.
-
-
-
-
-
+As a result algorithms to solve such problems typically require initialization and can struggle to find globally optimal solutions \cite{polak2012optimization}.
+Though techniques have been proposed to improve the speed of algorithms to solve NMPC problems \cite{patterson2014gpops,hereid2017frost} or even globally solve such problems without requiring initialization \cite{zhao2017control}, these formulations still take several seconds per iteration, which makes them too slow to be applied during real-time control.
 
 
 % \subsubsection{Nonlinear MPC}
