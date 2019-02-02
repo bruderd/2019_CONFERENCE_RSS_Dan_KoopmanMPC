@@ -13,16 +13,17 @@ Importantly, this is also the case during Koopman based MPC control design, wher
 \begin{equation}
 \begin{aligned}
 & \underset{u[i] , z[i]}{\text{min}}
-& & z[N_h]^{T} G_{N_h} z[N_h] + g_{N_h}^T z[N_h] + \cdots \\
-&&& \sum_{i=0}^{N_h - 1} z[i]^T G_i z[i] + u[i]^T H_i u[i] + g_i^T z[i] + h_i^T u[i]\\
+& & z[N_h]^{T} G_{N_h} z[N_h] + g_{N_h}^T z[N_h] +  \\
+&&& + \sum_{i=0}^{N_h - 1} z[i]^T G_i z[i] + u[i]^T H_i u[i] + g_i^T z[i] + h_i^T u[i]\\
 & \text{s.t.}
 & & z[i+1] = \hat{A} z[i] + \hat{B} u[i] , \quad \forall i \in \{ 0 , \ldots , N_h - 1 \} \\
 &&& E_i z[i] + F_i u[i] \leq b_i , \quad \forall i \in \{ 0 , \ldots , N_h - 1\} \\
 &&& z[0] = \psi (x[k])
 \end{aligned} \label{eq:mpc}
 \end{equation}
-where $G_i \in \Real^{N \times N}$ and $H_i \in \Real^{m \times m}$ are positive semidefinite matrices and where each time the program is called, the predictions are initialized from the current lifted state $\psi (x[k])$.
+where $N_h \in \mathbb{N}$ is the prediction horizon, $G_i \in \Real^{N \times N}$ and $H_i \in \Real^{m \times m}$ are positive semidefinite matrices, and where each time the program is called, the predictions are initialized from the current lifted state $\psi (x[k])$.
 The matrices $E_i \in \Real^{c \times N}$ and $F_i \in \Real^{c \times m}$ and the vector $b_i \in \Real^{c}$ define state and input polyhedral constraints where $c$ denotes the number of imposed constraints.
+While the size of the cost and constraint matrices here depend on the dimension of the lifted state $N$, \citet{korda2018linear} show these can be rendered independent of $N$ by transforming the problem into its so-called ''dense-form.''
 Algorithm \ref{alg:mpc} summarizes the closed-loop operation of this Koopman based MPC controller.
 
 %% MPC algorithm
@@ -51,11 +52,11 @@ Algorithm \ref{alg:mpc} summarizes the closed-loop operation of this Koopman bas
 % \end{aligned} \label{eq:mpccost}
 % \end{equation}
 
-Since this optimization problem is convex, it has a unique globally optimal solution that can efficiently constructed without initialization \cite{boyd2004convex} for models with thousands of states and inputs  \cite{paulson2014fast,stellato2018osqp}.
+Since this optimization problem is convex, it has a unique globally optimal solution that can efficiently be constructed without initialization \cite{boyd2004convex} for models with thousands of states and inputs  \cite{paulson2014fast,stellato2018osqp}.
 This contrasts sharply with the MPC formulation for nonlinear systems (referred to as nonlinear model predictive control or NMPC \cite{allgower2012nonlinear}).
-NMPC requires solving an optimization problem with nonlinear constraints and (potentially) nonlinear cost function.
-As a result algorithms to solve such problems typically require initialization and can struggle to find globally optimal solutions \cite{polak2012optimization}.
-Though techniques have been proposed to improve the speed of algorithms to solve NMPC problems \cite{patterson2014gpops,hereid2017frost} or even globally solve such problems without requiring initialization \cite{zhao2017control}, these formulations still take several seconds per iteration, which makes them too slow to be applied during real-time control.
+NMPC requires solving an optimization problem with nonlinear constraints and a (potentially) nonlinear cost function.
+As a result, algorithms to solve such problems typically require initialization and can struggle to find globally optimal solutions \cite{polak2012optimization}.
+Though techniques have been proposed to improve the speed of algorithms to solve NMPC problems \cite{patterson2014gpops,hereid2017frost} or even globally solve such problems without requiring initialization \cite{zhao2017control}, these formulations still take several seconds per iteration, which can make them too slow to be applied during real-time control.
 
 
 % \subsubsection{Nonlinear MPC}
