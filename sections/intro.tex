@@ -7,7 +7,7 @@ Soft robots have bodies made out of intrinsically soft and/or compliant material
 This inherent softness enables them to safely interact with delicate objects, and to passively adapt their shape to unstructured environments \cite{rus2015design}.
 Such traits are desirable for robotic applications that demand safe human-robot interaction such as wearable robots, in-home assistive robots, and medical robots.
 Unfortunately, the soft bodies of these robots also impose modeling and control challenges, which have restricted their functionality to date. 
-In fact, many novel soft devices such as soft grippers (cite), crawlers (cite), and swimmers (cite) exploit the flexibility of their bodies to achieve coarse behaviors such as grasping and locomotion, but do not exhibit precise control capabilities \Dan{don't forget to add citations here}.
+While many novel soft devices such as soft grippers \cite{ilievski2011soft}, crawlers \cite{tolley2014resilient}, and swimmers \cite{marchese2014autonomous} exploit the flexibility of their bodies to achieve coarse behaviors such as grasping and locomotion, they do not exhibit precise control capabilities.
 % Emulating the functionality of the dexterous and precise soft systems found in nature such as octopus arms, elephant trunks, and tongues stems from the inherent difficulty of modeling continuum structures and controlling nonlinear dynamical systems.
 
 % Unfortunately, their soft bodies also make soft robots notoriously difficult to model and control, limiting their functionality to date. 
@@ -27,21 +27,21 @@ Consider for instance rigid-bodied robotic systems that are made up of rigid lin
 %It has been shown that the full geometry of a rigid-bodied system can be described in terms of joint deformations, making joint deformations the canonical choice of state variables for rigid-bodied robots \cite{spong2008robot}.  %[Brent thinks the following would be a little easier to read:]
 Since joint displacements can be used to fully describe the configuration of a rigid-bodied system, joint displacements and their derivatives make a natural choice for the state variables for rigid-bodied robots \cite{spong2008robot}.
 One can use this choice of state variables to describe the dynamics of the rigid-bodied robot.
-This, as a result, makes the application of model-based control design techniques such as feedback linearization \cite{}, nonlinear model predictive control \cite{}, LQR-trees \cite{}, sequential action control \cite{ansari2016sequential}, and others feasible. \Dan{don't forget to add citations here} 
+This, as a result, makes the application of model-based control design techniques such as feedback linearization \cite{spong2008robot}, nonlinear model predictive control \cite{allgower2012nonlinear}, LQR-trees \cite{tedrake2010lqr}, sequential action control \cite{ansari2016sequential}, and others feasible.
 
 Soft robots, in contrast, do not exhibit localized deformation at discrete joints, but instead deform continuously along their bodies and have infinite degrees-of-freedom.
 In the absence of joints, there does not yet exist a canonical choice of state variables to describe the geometry of a soft robot.
 % Instead, it is common practice to choose a state made up of observable parameters, such as end-effector position (cite our koopman paper), curvature of body (cite), or fluid pressure (cite) \Dan{think of better example(s)}.
 As a result, existing representations are typically only rich enough to describe the system under restrictive simplifying assumptions.
 For example, the popular piecewise constant curvature model \cite{webster2010design} provides a low-dimensional description of the shape of continuum robots, but only under the assumption that bending occurs in sections of constant curvature.
-Other simplified models such as pseudo-rigid-body (cite) and quasi-static \cite{bruder2018iros} (cite others), have demonstrated sufficient accuracy for some objectives (cite), \Dan{don't forget to add citations here} 
+Other simplified models such as pseudo-rigid-body \cite{howell1996evaluation} and quasi-static \cite{bruder2018iros, thuruthel2018model, gravagne2003large, trivedi2008geometrically}, have demonstrated sufficient accuracy for some objectives as well,
 but they are only able to describe the behavior in a subset of configurations of the soft robot which can make applying model-based control design techniques impractical. 
 
 %% FIGURE: Overview of the different system representations and control approaches
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{figures/overview_v8.pdf}
-    \caption{A nonlinear dynamical system (bottom-left) has a \emph{linear} representation in the \emph{lifted} space made up of all real-valued functions (top-left). While a model predictive controller (MPC) designed for the nonlinear system in state-space requires solving a non-convex optimization problem to choose inputs at each time-step (bottom-right), this problem is convex for an MPC controller designed for the lifted linear system (top-right). This paper develops a data driven method to construct such a lifted model representation  for soft robotic systems in the presence of outliers and a convex, model-based control design technique for such systems. }
+    \caption{A nonlinear dynamical system (bottom-left) has a \emph{linear} representation in the \emph{lifted} space made up of all real-valued functions (top-left). While a model predictive controller (MPC) designed for the nonlinear system in state-space requires solving a non-convex optimization problem to choose inputs at each time-step (bottom-right), this problem is convex for an MPC controller designed for the lifted linear system (top-right). This paper develops a data-driven method to construct such a lifted model representation for soft robotic systems in the presence of outliers and a to construct a convex, model-based control design technique for such systems. }
     \vspace*{-0.5cm}
     \label{fig:overview}
 \end{figure}
@@ -50,7 +50,7 @@ but they are only able to describe the behavior in a subset of configurations of
 % \Dan{This paragraph is a mess. Going to step away and come back to it}
 Alternatively, data-driven methods, such as machine learning and neural networks, can be applied to construct models for soft robots without making structural simplifying assumptions.
 Such models serve as a ``black-box'' by mapping from inputs to outputs and have been shown to predict behavior well across various configurations of the soft robot  \cite{gillespie2018learning, thuruthel2018model}.
-However, since no explicit model is constructed, it can be challenging to apply existing model-based control design techniques.
+However, since no explicit model is constructed, these methods are also not amenable to existing model-based control design techniques.
 % While such ``black-box'' models have been shown to predict behavior well, they offer little insight when it comes to controller design.
 % \Ram{can you be more explicit here?} 
 
@@ -80,8 +80,6 @@ The Koopman approach to modeling and control is well suited for soft robots for 
 Soft robots pose less of a physical threat to themselves or their surroundings when subjected to random control inputs than conventional rigid-bodied robots. 
 This makes it possible to safely collect input-output data over a wide range of operating conditions, and to do so in an automated fashion. 
 Furthermore, since the Koopman procedure is entirely data-driven, it inherently captures input-output behavior and avoids the ambiguity involved in choosing a discrete set of states for a structure with infinite degrees of freedom.
-% Soft robots are also nonlinear dynamical systems, but this approach generates a linear system representation.
-% As will be shown later, this linear representation can be used to construct a controller which computes control inputs by solving a convex optimization problem at each time step.
 
 %% Our contribution: Modifications/additions needed to get this to reliably work for a real system
 % This work applies the Koopman based system identification method from \citet{mauroy2016linear} and the Koopman based model predictive control method from \citet{korda2018linear} to a real soft robotic system.
@@ -91,11 +89,10 @@ The novel contributions of this work, as depicted in Fig. \ref{fig:overview} are
     \item An extension to the Koopman system identification procedure described in \cite{mauroy2016linear} to make the resulting Koopman operator both more sparse and less sensitive to outliers and noise in the training data,
     \item The application of this identified Koopman model for model predictive control of a physical soft robotic system.
 \end{enumerate}
-% We achieve (1) by introducing an $L^1$ penalty term into the least-squares optimization problem used to solve for the approximate Koopman operator.
-Contribution (1) arose by necessity from the pursuit of contribution (2), since real mechanical systems suffer from both noise and computational limitations. \Dan{Rewrite this last sentence.} \Ram{my suggestion is that you highlight in the previous paragraph (the one about the utility of applying Koopman operator theory to soft robots) that pressure regulators for soft robots suck so they are super noisy which can make identifying such a Koopman model in practice difficult.}
+% Contribution (1) arose by necessity from the pursuit of contribution (2), since real mechanical systems suffer from both noise and computational limitations. \Dan{Rewrite this last sentence.} \Ram{my suggestion is that you highlight in the previous paragraph (the one about the utility of applying Koopman operator theory to soft robots) that pressure regulators for soft robots suck so they are super noisy which can make identifying such a Koopman model in practice difficult.}
 % Data collected from physical mechanical systems is prone to noise, which can lead to over-fitting of data-driven models.
 % Because real mechanical systems suffer from noise this step is 
-% Both of these are desirable features when working with real systems, which suffer from noise and computational limitations.
+
 
 
 
@@ -105,12 +102,3 @@ In Section \ref{sec:sysid} we formally introduce the Koopman operator and descri
 In Section \ref{sec:mpc} we describe how the Koopman model can be used to construct a linear model predictive controller.
 In Section \ref{sec:experiments} we describe the soft robot and the set of experiments used to evaluate the performance of a Koopman-based MPC controller.
 In Section \ref{sec:conclusion} concluding remarks and perspectives are provided.
-
-
-
-
-
-% %% Solution: Data-driven/linear representation, description of koopman approach
-% In this paper, we present a novel method for the modeling and control of soft robots based on Koopman Operator Theory.
-% This method addresses the challenges of modeling and control by offering a way to build a \emph{linear} model from data that still captures the \emph{nonlinear} input-output behavior of a soft robot.
-% This approach is based on the system identification method originally presented in \citet{mauroy2017koopman} and the control approach laid out in \citet{korda2018linear}.

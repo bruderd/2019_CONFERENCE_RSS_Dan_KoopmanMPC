@@ -23,7 +23,7 @@ Importantly, this is also the case during Koopman based MPC control design, wher
 \end{equation}
 where $N_h \in \mathbb{N}$ is the prediction horizon, $G_i \in \Real^{N \times N}$ and $H_i \in \Real^{m \times m}$ are positive semidefinite matrices, and where each time the program is called, the predictions are initialized from the current lifted state $\psi (x[k])$.
 The matrices $E_i \in \Real^{c \times N}$ and $F_i \in \Real^{c \times m}$ and the vector $b_i \in \Real^{c}$ define state and input polyhedral constraints where $c$ denotes the number of imposed constraints.
-While the size of the cost and constraint matrices here depend on the dimension of the lifted state $N$, \citet{korda2018linear} show these can be rendered independent of $N$ by transforming the problem into its so-called ''dense-form.''
+While the size of the cost and constraint matrices in \eqref{eq:mpc} depend on the dimension of the lifted state $N$, \citet{korda2018linear} show these can be rendered independent of $N$ by transforming the problem into its so-called ''dense-form.''
 Algorithm \ref{alg:mpc} summarizes the closed-loop operation of this Koopman based MPC controller.
 
 %% MPC algorithm

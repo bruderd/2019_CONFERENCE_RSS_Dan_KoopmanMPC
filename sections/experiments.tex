@@ -3,20 +3,21 @@
 
 %% Introduction
 This section describes the robot and the set of experiments used to demonstrate the efficacy of the modeling and control methods from Sections \ref{sec:sysid} and \ref{sec:mpc}.
-\Ram{you need to highlight the video which you will submit with the supplementary material here.}\Dan{How do I refer to the video? Do I just say 'the supplementary video submission' or should we have a link to youtube?}  \Brent{ I think just: ``see supplementary video file''.  I think you could expand this outline just a little to help the reader anticipate what's coming.  Perhaps say that in the following you will compare the performance of the nonlinear Koopman operator based MPC controller and a linear MPC controller. }
+Video of the soft robot performing several tasks from the final experiment is included in the supplementary video file.
+% \Ram{you need to highlight the video which you will submit with the supplementary material here.}\Dan{How do I refer to the video? Do I just say 'the supplementary video submission' or should we have a link to youtube?}  \Brent{ I think just: ``see supplementary video file''.  I think you could expand this outline just a little to help the reader anticipate what's coming.  Perhaps say that in the following you will compare the performance of the nonlinear Koopman operator based MPC controller and a linear MPC controller. }
 
 %% SUBS: Description of the system being 
 \subsection{Robot Description: Soft Arm with Laser Pointer}
 \label{sec:robot}
 
 The robot used for the experiments is a suspended soft arm with a laser pointer attached to the end effector (see Fig. \ref{fig:rig}). 
-The laser dot is projected onto a ${40\text{ cm} \times 40\text{ cm}}$ flat board which sits $30\text{cm}$ beneath the tip of the laser pointer when the robot is in its relaxed position (i.e. hanging straight down) \Dan{these numbers are made up need to measure}.
-The position of the laser dot is measured by a digital webcam overlooking (aimed at) the board.
+The laser dot is projected onto a ${50\text{ cm} \times 50\text{ cm}}$ flat board which sits $34\text{ cm}$ beneath the tip of the laser pointer when the robot is in its relaxed position (i.e. hanging straight down).
+The position of the laser dot is measured by a digital webcam overlooking the board.
 
 The arm itself consists of two sections that are each composed of three pneumatic artificial muscles or PAMs (also known as McKibben actuators \cite{tondu2012modelling}) adhered to a central foam spine by latex rubber bands (see Fig. \ref{fig:rig}).
 The PAMs in the upper and lower sections are internally connected so that only three input pressure lines are required, and
 they are arranged such that for any bending of the upper section, bending in the opposite direction occurs in the bottom section.
-This ensures that the laser pointer mounted to the end effector points approximately vertically downward so that the light strikes the board at all times.
+This ensures that the laser pointer mounted to the end effector points approximately vertically downward so that the laser light strikes the board at all times.
 The pressures inside the actuators are regulated by three Enfield TR-010-g10-s pneumatic pressure regulators, which accept ${0-10}$V command signals corresponding to pressures of ${ \approx 0 - 140 }$ kPa.
 In all the experiments there are three inputs corresponding to the voltages into the pressure regulators and a two dimensional state corresponding to the position of the laser dot with respect to the center of the board.
 
@@ -34,23 +35,22 @@ In all the experiments there are three inputs corresponding to the voltages into
 \label{sec:noise}
 
 % An input-output system is said to exhibit \emph{stochastic} behavior if identical inputs sometimes produce different outputs.
-Most mechanical systems demonstrate stochastic behavior (i.e. when an identical input under the same state produces a different output) to some extent.
-Stochastic behavior is particularly problematic for pressure regulators \Ram{include a reference}, which can limit the precision of soft robotic systems that are attempting to perform dynamic tasks.
-This can restrict the predictive capability of any model of our system.
+Most mechanical systems demonstrate stochastic behavior (i.e. when an identical input and state produces a different output) to some extent.
+Stochastic behavior is particularly problematic for pneumatic pressure regulators, which can limit the precision of pneumatically driven soft robotic systems
+and undermine the predictive capability of models.
 
 We quantified the stochastic behavior of our soft robot system by observing the variations in output from period-to-period under sinusoidal inputs to the three actuators of the form
 \begin{align} 
-    u_k &= \begin{bmatrix} 6 \sin ( \frac{2 \pi}{T} k T_s ) + 3 \vspace{5pt} \\ 
+    u[k] &= \begin{bmatrix} 6 \sin ( \frac{2 \pi}{T} k T_s ) + 3 \vspace{5pt} \\ 
     6 \sin ( \frac{2 \pi}{T} k T_s - \frac{T}{3} ) + 3 \vspace{5pt} \\ 
     6 \sin ( \frac{2 \pi}{T} k T_s  - \frac{2T}{3}) + 3\end{bmatrix}
     \label{eq:unoise}
 \end{align}
 for periods of $T = 6,7,8,9,10,11,12$ seconds and a sampling time of $T_s = 0.1$ seconds with a zero-order-hold between samples. 
-Under these inputs, the laser dot traces out a circle, with some variability in the trajectory over each period.
+Under these inputs, the laser dot traces out a circle with some variability in the trajectory over each period.
 In Fig.~\ref{fig:noise} the trajectories over 210 periods are superimposed along with the average over all trials.
 Nearly all of the observed points fell within 1 cm of the mean trajectory.
-Given this inherent stochasticity of our soft robotic system, even the best controller may only be able to control the output to within 1 cm of the desired trajectory.
-\Dan{Still needs rewording}.
+Given this inherent stochasticity of our soft robotic system, we expect only to be able to control the output to within $\approx 1$ cm of a desired trajectory.
 
 %% FIG: Noise inherent to the system
 \begin{figure}
@@ -59,6 +59,7 @@ Given this inherent stochasticity of our soft robotic system, even the best cont
     \caption{The left plot shows the average response of the system over a single period when the sinusoidal inputs of varying frequencies described by \eqref{eq:unoise} are applied. All of the particular responses are subimposed in light grey.
     The right plot shows the distribution of trajectories about the mean, with all distances within two standard deviations highlighted in grey. The width of the distribution illustrates how for the soft robot system identical inputs can produce outputs that vary by up to 2 cm.}
     \label{fig:noise}
+    \vspace*{-0.5cm}
 \end{figure}
 
 %% SUBS: DATA COLLECTION
@@ -98,9 +99,11 @@ The model chosen is the one that minimizes both density and prediction error, wh
     \centering
     \includegraphics[width=\linewidth]{figures/lasso_v2.pdf}
     \caption{As $\lambda$ (the weight of the $L^1$ penalty term in \eqref{eq:lasso}) increases, the density of the lifted system matrix $\hat{A}$ decreases.
-    The model generated by solving \eqref{eq:lasso} with the $\lambda$ valued designated by the vertical grey bar has lower error and a sparser $\hat{A}$ matrix than the least-squares solution to \eqref{eq:koopGamma}, which occurs at $\lambda = 0$. \Brent{I think it would be a good idea to include a label for the y-axis.  Perhaps just ``Matrix Density''. I suppose it's clear that matrix density is the inverse of sparsity and 1 means all non-zero. So we can leave out the units.} }
+    The model generated by solving \eqref{eq:lasso} with the $\lambda$ valued designated by the vertical grey bar has lower error and a sparser $\hat{A}$ matrix than the least-squares solution to \eqref{eq:koopGamma}, which occurs at $\lambda = 0$.}
     \label{fig:lasso}
+    % \vspace*{-0.25cm}
 \end{figure}
+
 
 
 %% SUBS: PREDICTOR COMPARISON
@@ -111,15 +114,16 @@ The accuracy of the predictions generated by each of the two models were evaluat
 The model responses were simulated over a time horizon of $2.5$ seconds given the same initial condition and input as the real system.
 The results of this comparison are summarized by Fig. \ref{fig:predict} and Table \ref{tab:predict}. 
 They illustrate that the Koopman model predictions are more accurate over the time horizon.
-\Ram{probably want to describe performance in relation to stochastic behavior.}
 
 %% FIGURE: Linear vs. Koopman model predictions
 \begin{figure}
     \centering
-    \includegraphics[width=\linewidth]{figures/predictionComparison_v3.pdf}
-    \caption{The average actual response and the model predictions for the robot over a 2.5 second horizon with the sinusoidal inputs described in \eqref{eq:unoise} with period $T = 10$ seconds applied. The left side shows the laser dot position projected into each coordinate separately. The error displayed on the right plot is defined as the Euclidean distance between the predicted laser dot position and the average actual position at each point in time. \Brent{If you need to save space, I think you can remove the Error plot on the right.  The errors are already visible in the plots on the left, even if they are in state space variables.  Also, the table of Euclidean error is also available.  }}
+    \includegraphics[width=\linewidth]{figures/predictionComparison_v5.pdf}
+    \caption{The (average) actual response and the model predictions for the robot over a 2.5 second horizon with the sinusoidal inputs described in \eqref{eq:unoise} with period $T = 10$ seconds applied. The left plot shows the actual trajectory of the laser dot along with model predictions. The error displayed on the right plot is defined as the Euclidean distance between the predicted laser dot position and the actual position at each point in time. The prediction error is smaller for the Koopman model over the entire horizon.}
     \label{fig:predict}
+    % \vspace*{-0.5cm}
 \end{figure}
+
 
 %% TABLE: Prediction Comparison
 \begin{table}
@@ -157,10 +161,19 @@ They illustrate that the Koopman model predictions are more accurate over the ti
 
 
 
+
 %% SUBS: Description of the controllers and tracing task
 \subsection{Experiment 2: Model-Based Control Comparison}
 \label{sec:mpcexp}
-% \Dan{Lot's of imprecise explanations in this section}
+
+%% FIGURE: Visual results
+\begin{figure*}
+    \centering
+    \includegraphics[width=\linewidth]{figures/results_edited_wblue.pdf}
+    \caption{The results of the K-MPC controller (row 1, blue) and the L-MPC controller (row 2, red) in performing trajectory following tasks 1-3. The reference trajectory for each task is subimposed in black as well as a grey buffer with width equal to two standard deviations of the noise probability density shown in Fig. \ref{fig:noise}.}
+    \label{fig:results}
+\end{figure*}
+
 
 %% Description of compared controllers
 The two identified models were each used to build a model predictive controller which solves an optimization problem in the form of \eqref{eq:mpc} at each time step.
@@ -176,29 +189,21 @@ In the L-MPC case, $y[i] = C_L x_L[i]$ where $x_L$ is the four dimensional syste
 % The optimization problem for each controller also featured a convex constraint to limit the rate at which the control inputs could change over time... 
 
 % task
-The performance of the controllers was assessed with respect to a set of two trajectory following tasks.
-Each task was to follow a reference trajectory as it traced out the following shapes over a certain amount of time:
+The performance of the controllers was assessed with respect to a set of three trajectory following tasks.
+Each task was to follow a reference trajectory as it traced out one of the following shapes over a certain amount of time:
 \begin{enumerate}
     \item Pacman (90 seconds)
     \item Star (180 seconds)
     \item Block $\Sigma$ (300 seconds)
 \end{enumerate}
-The error for each trial was quantified as the Cartesian distance from the reference trajectory at each time step over the length of the trial.
+The error for each trial was quantified as the Euclidean distance from the reference trajectory at each time step over the length of the trial.
 
 The performances of the K-MPC and L-MPC controllers at Tasks 1, 2, and 3 are shown visually in Fig. \ref{fig:results}, and the error is quantified in Table \ref{tab:RMSE}.
-In both tasks the K-MPC controller \Brent{achieved better performance} \sout{performed best}, exhibiting an average tracking error of 1.26~cm compared to the L-MPC controller's average error of 2.45~cm.
+In both tasks the K-MPC controller achieved better performance, exhibiting an average tracking error of 1.26~cm compared to the L-MPC controller's average error of 2.45~cm.
 This amounts to an average error roughly $25\%$ larger than than the maximum magnitude of observed noise (see Fig. \ref{fig:noise})
 % The magnitude of this error was larger than the maximum magnitude of observed noise (see Fig. \ref{fig:noise}), but only by about one quarter of a centimeter, or $1 \%$ of the total range of motion observed. 
 
 
-
-%% FIGURE: Visual results
-\begin{figure*}
-    \centering
-    \includegraphics[width=\linewidth]{figures/results_edited_wblue.pdf}
-    \caption{The results of the K-MPC controller (row 1, blue) and the L-MPC controller (row 2, red) in performing trajectory following tasks 1-3. The reference trajectory for each task is subimposed in black as well as a grey buffer with width equal to two standard deviations of the noise probability density shown in Fig. \ref{fig:noise}.}
-    \label{fig:results}
-\end{figure*}
 
 %% TABLE: RMSE results table
 \begin{table}

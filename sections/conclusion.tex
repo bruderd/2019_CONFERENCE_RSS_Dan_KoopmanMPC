@@ -1,21 +1,36 @@
-\section{Discussion and Conclusion}
+\section{Conclusion}
 \label{sec:conclusion}
 
-\Dan{For now this is just a list of talking points}
-Discussion of results:
-The model predictive controller using the the Koopman model outperformed the other controllers in a variety of trajectory following tasks.
+% Reiteration of contribution
+In this work, a data-driven modeling and control method based on Koopman operator theory was successfully applied to a soft robot.
+The Koopman-based MPC controller was shown to be capable of commanding a soft robot to follow a reference trajectory better than an MPC controller based on another data-driven model.
+% Reiterarion of why important for soft robotics
+By making explicit control-oriented models of soft robots easier to construct, this method holds the promise to unlock the untapped potential of soft robots by enabling the rapid development of new control strategies.
 
-Sources of Error:
--Model inaccuracies due to insufficient data.
--Model inaccuracies due to Koopman truncation.
--Poor performance of electronic pressure regulators.
--Limited accuracy of camera based laser tracking system.
+% Current shortcomings that should be addressed in future work (more dynamics excitement, higher dimensional systems)
+While these preliminary results are promising, further work is needed to make such methods feasible for higher dimensional robotic systems.
+Toward that end, this work introduced a method for promoting sparsity in matrix representations of the Koopman model.
+Additional work will explore strategies for further promoting sparsity, choosing the most effective basis of observables, and building models that can account for external loading and contact forces.
 
-Current Shortcomings of Method:
--Curse of dimensionality, but sparsity could help (cite that paper)
--Does not generalize outside of observed data, could be solved by switching controllers/hybrid models.
 
-Take Aways:
--Has potential to revolutionize soft robot control by providing much more control friendly representation of dynamics.
--Soft robots are well suited for a data-driven method because they can be observed safely under randomized control inputs.
--This is the first time this method has been shown to be effective for controlling a real soft robotic system.
+
+
+
+% \Dan{For now this is just a list of talking points}
+% Discussion of results:
+% The model predictive controller using the the Koopman model outperformed the other controllers in a variety of trajectory following tasks.
+
+% Sources of Error:
+% -Model inaccuracies due to insufficient data.
+% -Model inaccuracies due to Koopman truncation.
+% -Poor performance of electronic pressure regulators.
+% -Limited accuracy of camera based laser tracking system.
+
+% Current Shortcomings of Method:
+% -Curse of dimensionality, but sparsity could help (cite that paper)
+% -Does not generalize outside of observed data, could be solved by switching controllers/hybrid models.
+
+% Take Aways:
+% -Has potential to revolutionize soft robot control by providing much more control friendly representation of dynamics.
+% -Soft robots are well suited for a data-driven method because they can be observed safely under randomized control inputs.
+% -This is the first time this method has been shown to be effective for controlling a real soft robotic system.
