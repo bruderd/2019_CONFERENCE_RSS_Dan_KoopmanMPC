@@ -17,6 +17,15 @@ While many novel soft devices such as soft grippers \cite{ilievski2011soft}, cra
 % Many novel devices such as soft grippers (cite), crawlers (cite), and swimmers (cite) exploit the flexibility of their bodies to achieve coarse behaviors such as grasping and locomotion, but do not exhibit precise control capabilities
 % can be attributed to two innate characteristics of soft systems: continuum structure, and nonlinear dynamical behavior. 
 
+%% FIGURE: Overview of the different system representations and control approaches
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figures/overview_v8.pdf}
+    \caption{A nonlinear dynamical system (bottom-left) has a \emph{linear} representation in the \emph{lifted} space made up of all real-valued functions (top-left). While a model predictive controller (MPC) designed for the nonlinear system in state-space requires solving a non-convex optimization problem to choose inputs at each time-step (bottom-right), this problem is convex for an MPC controller designed for the lifted linear system (top-right). This paper develops a data-driven method to construct such a lifted model representation for soft robotic systems in the presence of outliers and a to construct a convex, model-based control design technique for such systems. }
+    \vspace*{-0.5cm}
+    \label{fig:overview}
+\end{figure}
+
 
 %% Technical challenges to modeling: continuum structure
 % Even building models for soft robots presents a challenge.
@@ -36,15 +45,6 @@ As a result, existing representations are typically only rich enough to describe
 For example, the popular piecewise constant curvature model \cite{webster2010design} provides a low-dimensional description of the shape of continuum robots, but only under the assumption that bending occurs in sections of constant curvature.
 Other simplified models such as pseudo-rigid-body \cite{howell1996evaluation} and quasi-static \cite{bruder2018iros, thuruthel2018model, gravagne2003large, trivedi2008geometrically}, have demonstrated sufficient accuracy for some objectives as well,
 but they are only able to describe the behavior in a subset of configurations of the soft robot which can make applying model-based control design techniques impractical. 
-
-%% FIGURE: Overview of the different system representations and control approaches
-\begin{figure}
-    \centering
-    \includegraphics[width=\linewidth]{figures/overview_v8.pdf}
-    \caption{A nonlinear dynamical system (bottom-left) has a \emph{linear} representation in the \emph{lifted} space made up of all real-valued functions (top-left). While a model predictive controller (MPC) designed for the nonlinear system in state-space requires solving a non-convex optimization problem to choose inputs at each time-step (bottom-right), this problem is convex for an MPC controller designed for the lifted linear system (top-right). This paper develops a data-driven method to construct such a lifted model representation for soft robotic systems in the presence of outliers and a to construct a convex, model-based control design technique for such systems. }
-    \vspace*{-0.5cm}
-    \label{fig:overview}
-\end{figure}
 
 %% data-driven models: don't make assumptions but not great for building controllers
 % \Dan{This paragraph is a mess. Going to step away and come back to it}
