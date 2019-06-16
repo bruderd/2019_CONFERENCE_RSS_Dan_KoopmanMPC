@@ -16,6 +16,10 @@
 \usepackage{soul}
 \usepackage[ruled]{algorithm2e}
 
+\usepackage{boldline}
+\setlength{\arrayrulewidth}{0.75pt} % make table lines thicker
+
+
 % Editing tools
 \newcounter{RamCount}
 \newcounter{DavidCount}
@@ -41,6 +45,7 @@
 }
 
 \begin{document}
+\setlength{\textfloatsep}{8pt}% decrease vertical space after figures
 
 % paper title
 \title{Modeling and Control of Soft Robots Using the Koopman Operator and Model Predictive Control}
@@ -72,7 +77,7 @@ Email: cdremy@umich.edu}
 \authorblockA{Mechanical Engineering\\
 University of Michigan\\
 Ann Arbor, Michigan 48109\\
-Email: ramv@umich.edu}
+Email: ramv@umich.edu} %
 }
 
 
@@ -113,7 +118,8 @@ Email: ramv@umich.edu}
 \input{sections/experiments.tex}
 \input{sections/conclusion.tex}
 
-% \section*{Acknowledgments}
+\section*{Acknowledgments}
+This material is supported by the Toyota Research Institute, and is based upon work supported by the National Science Foundation Graduate Research Fellowship Program under Grant No. 1256260 DGE. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.
 
 %% Use plainnat to work nicely with natbib. 
 % \newpage

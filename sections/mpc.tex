@@ -4,11 +4,10 @@
 A system model enables the design of model-based controllers that leverage model predictions to choose suitable control inputs for a given task.
 In particular, model-based controllers can anticipate future events, allowing them to optimally choose control inputs over a finite time horizon.
 The most popular model-based control design technique is model predictive control (MPC), wherein one optimizes the control input over a finite time horizon, applies that input for a single timestep, and then optimizes again, repeatedly \cite{rawlings2009model}.
-Applying MPC to design a controller for linear systems corresponds to solving a convex quadratic program. 
+For linear systems, MPC consists of iteratively solving a convex quadratic program.
 
 % optimizing the control input over an $N_h$ step planning horizon consists of solving a convex quadratic program.
-
-Importantly, this is also the case during Koopman based MPC control design, wherein one solves the following program at each time instance $k$ of the closed-loop operation:
+Importantly, this is also the case for Koopman-based MPC control, wherein one solves the following program at each time instance $k$ of the closed-loop operation:
 %% Linear MPC optimization problem
 \begin{equation}
 \begin{aligned}

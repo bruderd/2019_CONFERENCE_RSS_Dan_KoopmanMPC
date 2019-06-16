@@ -3,7 +3,7 @@
 
 %% Introduction
 This section describes the robot and the set of experiments used to demonstrate the efficacy of the modeling and control methods from Sections \ref{sec:sysid} and \ref{sec:mpc}.
-Video of the soft robot performing several tasks from the final experiment is included in the supplementary video file.
+Video of the soft robot performing several tasks from the final experiment is included in a supplementary video file\footnote{https://youtu.be/e35o2OPsQHs}.
 % \Ram{you need to highlight the video which you will submit with the supplementary material here.}\Dan{How do I refer to the video? Do I just say 'the supplementary video submission' or should we have a link to youtube?}  \Brent{ I think just: ``see supplementary video file''.  I think you could expand this outline just a little to help the reader anticipate what's coming.  Perhaps say that in the following you will compare the performance of the nonlinear Koopman operator based MPC controller and a linear MPC controller. }
 
 %% SUBS: Description of the system being 
@@ -19,7 +19,7 @@ The PAMs in the upper and lower sections are internally connected so that only t
 they are arranged such that for any bending of the upper section, bending in the opposite direction occurs in the bottom section.
 This ensures that the laser pointer mounted to the end effector points approximately vertically downward so that the laser light strikes the board at all times.
 The pressures inside the actuators are regulated by three Enfield TR-010-g10-s pneumatic pressure regulators, which accept ${0-10}$V command signals corresponding to pressures of ${ \approx 0 - 140 }$ kPa.
-In all the experiments there are three inputs corresponding to the voltages into the pressure regulators and a two dimensional state corresponding to the position of the laser dot with respect to the center of the board.
+In the experiments there is a three-dimensional input corresponding to the voltages into the three pressure regulators and a two dimensional state corresponding to the position of the laser dot with respect to the center of the board.
 
 %% Rig figure
 \begin{figure}
@@ -27,7 +27,7 @@ In all the experiments there are three inputs corresponding to the voltages into
     \includegraphics[width=\linewidth]{figures/rig_N_robot_smaller.pdf}
     \caption{The soft robot consists of two bending segments with a laser pointer attached to the end effector. A set of three pressure regulators is used to control the pressure inside of the pneumatic actuators (PAMs), and a camera is used to track the position of the laser dot.}
     \label{fig:rig}
-    \vspace*{-0.5cm}
+    % \vspace*{-0.5cm}
 \end{figure}
 
 %% SUBS: NOISE CHARACTERIZATION
@@ -36,7 +36,7 @@ In all the experiments there are three inputs corresponding to the voltages into
 
 % An input-output system is said to exhibit \emph{stochastic} behavior if identical inputs sometimes produce different outputs.
 Most mechanical systems demonstrate stochastic behavior (i.e. when an identical input and state produces a different output) to some extent.
-Stochastic behavior is particularly problematic for pneumatic pressure regulators, which can limit the precision of pneumatically driven soft robotic systems
+Stochastic behavior is characteristic of electronic pressure regulators, which can limit the precision of pneumatically driven soft robotic systems
 and undermine the predictive capability of models.
 
 We quantified the stochastic behavior of our soft robot system by observing the variations in output from period-to-period under sinusoidal inputs to the three actuators of the form
@@ -50,7 +50,7 @@ for periods of $T = 6,7,8,9,10,11,12$ seconds and a sampling time of $T_s = 0.1$
 Under these inputs, the laser dot traces out a circle with some variability in the trajectory over each period.
 In Fig.~\ref{fig:noise} the trajectories over 210 periods are superimposed along with the average over all trials.
 Nearly all of the observed points fell within 1 cm of the mean trajectory.
-Given this inherent stochasticity of our soft robotic system, we expect only to be able to control the output to within $\approx 1$ cm of a desired trajectory.
+Given this inherent stochasticity of our soft robotic system, in the best case we expect only to be able to control the output to within $\approx 1$ cm of a desired trajectory.
 
 %% FIG: Noise inherent to the system
 \begin{figure}
@@ -59,7 +59,7 @@ Given this inherent stochasticity of our soft robotic system, we expect only to 
     \caption{The left plot shows the average response of the system over a single period when the sinusoidal inputs of varying frequencies described by \eqref{eq:unoise} are applied. All of the particular responses are subimposed in light grey.
     The right plot shows the distribution of trajectories about the mean, with all distances within two standard deviations highlighted in grey. The width of the distribution illustrates how for the soft robot system identical inputs can produce outputs that vary by up to 2 cm.}
     \label{fig:noise}
-    \vspace*{-0.5cm}
+    % \vspace*{-0.5cm}
 \end{figure}
 
 %% SUBS: DATA COLLECTION
@@ -69,7 +69,7 @@ Given this inherent stochasticity of our soft robotic system, we expect only to 
 % How data was collected
 To construct a model, we ran the system through $16$ trials each lasting approximately $20$ minutes.
 A randomized input was applied during each trial to generate a representative sampling of the system's behavior over its entire operating range.
-To ensure randomization, a matrix, $\Upsilon \in [0,10]^{3\times 1000}$, of uniformly distributed random numbers between zero and ten was generated to be used as an input lookup table.
+To ensure randomization, a matrix $\Upsilon \in [0,10]^{3\times 1000}$ of uniformly distributed random numbers between zero and ten was generated to be used as an input lookup table.
 Each control input was smoothly varied between elements in consecutive columns of the table over a transition period $T_u$, with a time offset of $T_u / 3$ between each of the three control signals
 \begin{align}
     u_i (t) &= \frac{(\Upsilon_{i,k+1} - \Upsilon_{i,k})}{T_u} \left( t + \frac{(i-1) T_u}{3} \right) + \Upsilon_{i,k}
@@ -88,18 +88,18 @@ The Koopman model was identified via the method described in Section \ref{sec:sy
     a[k] &= \begin{bmatrix} x[k]^\top & x[k-1]^\top & u[k-1]^\top \end{bmatrix}^\top \\
     b[k] &= \begin{bmatrix} \left( \phi_{T_s} (x[k]) + \sigma[k] \right)^\top & x[k]^\top & u[k]^\top \end{bmatrix}^\top,
 \end{align}
-and using the $N=330$ dimensional set of basis functions consisting of all monomials of maximum degree 4.
+and using an $N=330$ dimensional set of basis functions consisting of all monomials of maximum degree 4.
 To find the sparsest acceptable matrix representation of the Koopman operator, equation \eqref{eq:lasso} was solved for ${ \lambda = 0,1,2, ... ,50 }$.
-Predictions from the resulting models were evaluated against a subset of the training data, with the error quantified as the average Euclidean distance between the prediction and actual trajectory at each point, normalized by dividing by the average Euclidean distance between the actual trajectory and zero.
+Predictions from the resulting models were evaluated against a subset of the training data, with the error quantified as the average Euclidean distance between the prediction and actual trajectory at each point, normalized by dividing by the average Euclidean distance between the actual trajectory and the origin.
 Fig.~\ref{fig:lasso} shows that as $\lambda$ increases so does this error, but the density of the $\hat{A}$ matrix of the lifted linear model decreases.
-The model chosen is the one that minimizes both density and prediction error, which results in an $\hat{A}$ matrix with $70 \%$ of its entries equal to zero.
+The model chosen is the one that minimizes prediction error, which results in an $\hat{A}$ matrix with $70 \%$ of its entries equal to zero.
 
 %% FIG: MODEL VS. WEIGHT OF L1 PENALTY (LASSO)
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{figures/lasso_v2.pdf}
     \caption{As $\lambda$ (the weight of the $L^1$ penalty term in \eqref{eq:lasso}) increases, the density of the lifted system matrix $\hat{A}$ decreases.
-    The model generated by solving \eqref{eq:lasso} with the $\lambda$ valued designated by the vertical grey bar has lower error and a sparser $\hat{A}$ matrix than the least-squares solution to \eqref{eq:koopGamma}, which occurs at $\lambda = 0$.}
+    The model generated by solving \eqref{eq:lasso} with the value of $\lambda$ designated by the vertical grey bar has lower error and a sparser $\hat{A}$ matrix than the least-squares solution to \eqref{eq:koopGamma}, which occurs at $\lambda = 0$.}
     \label{fig:lasso}
     % \vspace*{-0.25cm}
 \end{figure}
@@ -135,7 +135,7 @@ They illustrate that the Koopman model predictions are more accurate over the ti
         \hline
         \rowcolor{white} 
         & \multicolumn{7}{c |}{\textbf{Period of Sinusoidal Inputs (seconds)}} & \\
-        \cline{2-4} \rowcolor{white}
+        \cline{2-8} \rowcolor{white}
         \multirow{-2}{*}{\textbf{Model}} & 6 & 7 & 8 & 9 & 10 & 11 & 12 &\multirow{-2}{*}{\textbf{Avg.}} \\
         \hline
         % RESULTS FOR ROBOT A
@@ -169,14 +169,14 @@ They illustrate that the Koopman model predictions are more accurate over the ti
 %% FIGURE: Visual results
 \begin{figure*}
     \centering
-    \includegraphics[width=\linewidth]{figures/results_edited_wblue.pdf}
+    \includegraphics[width=\linewidth]{figures/results_M_edited.pdf}
     \caption{The results of the K-MPC controller (row 1, blue) and the L-MPC controller (row 2, red) in performing trajectory following tasks 1-3. The reference trajectory for each task is subimposed in black as well as a grey buffer with width equal to two standard deviations of the noise probability density shown in Fig. \ref{fig:noise}.}
     \label{fig:results}
 \end{figure*}
 
 
 %% Description of compared controllers
-The two identified models were each used to build a model predictive controller which solves an optimization problem in the form of \eqref{eq:mpc} at each time step.
+The two identified models were each used to build a model predictive controller which solves an optimization problem in the form of \eqref{eq:mpc} at each time step using the Gurobi Optimization software \cite{gurobi}.
 We refer to the two controllers by the abbreviations K-MPC for the one based on the Koopman model, and L-MPC for the one based on the linear state-space model. 
 %Or: We use the abbreviation K-MPC to refer to the controller based on the Koopman model and L-MPC for the controller based on the linear state-space model.  
 Both model predictive controllers run in closed-loop at $10$ Hz, feature an MPC horizon of 2.5 seconds ($N_h = 25$), and a cost function that penalizes deviations from a reference trajectory $r[k]$ over the horizon with both a running and terminal cost:
@@ -194,7 +194,7 @@ Each task was to follow a reference trajectory as it traced out one of the follo
 \begin{enumerate}
     \item Pacman (90 seconds)
     \item Star (180 seconds)
-    \item Block $\Sigma$ (300 seconds)
+    \item Block letter M (300 seconds)
 \end{enumerate}
 The error for each trial was quantified as the Euclidean distance from the reference trajectory at each time step over the length of the trial.
 
